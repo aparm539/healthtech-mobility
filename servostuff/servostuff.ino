@@ -32,7 +32,7 @@
 */
 
 /* Set the delay between fresh samples */
-#define BNO055_SAMPLERATE_DELAY_MS (100)
+#define BNO055_SAMPLERATE_DELAY_MS (5)
 
 // Check I2C device address and correct line below (by default address is 0x29 or 0x28)
 //                                   id, address
@@ -44,14 +44,18 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
     Arduino setup function (automatically called at startup)
 */
 /**************************************************************************/
-  Servo servo1;
-  Servo servo2;
+  Servo rollServo;
+  Servo pitchServo;
   Servo servo3;
+  int pitch; 
+  int roll;
+  int newPitch;
+  int newRoll;
 
 void setup(void)
 {
   Serial.begin(9600);
-  Serial.println("WebSerial 3D Firmware"); Serial.println("");
+  
 
   /* Initialise the sensor */
   if(!bno.begin())
@@ -66,8 +70,8 @@ void setup(void)
   /* Use external crystal for better accuracy */
   bno.setExtCrystalUse(true);
    
-  servo1.attach(6);
-  servo2.attach(5);
+  rollServo.attach(6);
+  pitchServo.attach(5);
   servo3.attach(3);
 
 
@@ -97,19 +101,18 @@ void loop(void)
          +----------+
   */
 
-  /* The WebSerial 3D Model Viewer expects data as heading, pitch, roll */
-  Serial.print(F("Orientation: "));
-  Serial.print(360 - (float)event.orientation.x);
-  Serial.print(F(", "));
-  Serial.print((float)event.orientation.y);
-  Serial.print(F(", "));
-  Serial.print((float)event.orientation.z);
-  Serial.println(F(""));
 
-  
-  servo1.write((int)event.orientation.y);
-  servo3.write((int)event.orientation.x);
-  servo2.write((int)event.orientation.z);
-  
+
+
+  pitch = (int)event.orientation.z;
+  roll = (int)event.orientation.y;
+
+  newPitch = map(pitch,-180,180,180,0);
+  newRoll=map(roll,-180,180,0,180);
+
+  pitchServo.write(newPitch);
+  rollServo.write(newRoll);
+
+
   delay(BNO055_SAMPLERATE_DELAY_MS);
 }
