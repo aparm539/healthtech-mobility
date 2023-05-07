@@ -38,27 +38,6 @@
 //                                   id, address
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
 
-/**************************************************************************/
-/*
-    Displays some basic information on this sensor from the unified
-    sensor API sensor_t type (see Adafruit_Sensor for more information)
-*/
-/**************************************************************************/
-void displaySensorDetails(void)
-{
-  sensor_t sensor;
-  bno.getSensor(&sensor);
-  Serial.println("------------------------------------");
-  Serial.print  ("Sensor:       "); Serial.println(sensor.name);
-  Serial.print  ("Driver Ver:   "); Serial.println(sensor.version);
-  Serial.print  ("Unique ID:    "); Serial.println(sensor.sensor_id);
-  Serial.print  ("Max Value:    "); Serial.print(sensor.max_value); Serial.println(" xxx");
-  Serial.print  ("Min Value:    "); Serial.print(sensor.min_value); Serial.println(" xxx");
-  Serial.print  ("Resolution:   "); Serial.print(sensor.resolution); Serial.println(" xxx");
-  Serial.println("------------------------------------");
-  Serial.println("");
-  delay(500);
-}
 
 /**************************************************************************/
 /*
@@ -87,8 +66,6 @@ void setup(void)
   /* Use external crystal for better accuracy */
   bno.setExtCrystalUse(true);
    
-  /* Display some basic information on this sensor */
-  displaySensorDetails();
   servo1.attach(6);
   servo2.attach(5);
   servo3.attach(3);
@@ -129,27 +106,10 @@ void loop(void)
   Serial.print((float)event.orientation.z);
   Serial.println(F(""));
 
-  /* The WebSerial 3D Model Viewer also expects data as roll, pitch, heading */
-  imu::Quaternion quat = bno.getQuat();
   
   servo1.write((int)event.orientation.y);
   servo3.write((int)event.orientation.x);
   servo2.write((int)event.orientation.z);
   
-  delay(5);
-
-  /* Also send calibration data for each sensor. */
-  uint8_t sys, gyro, accel, mag = 0;
-  bno.getCalibration(&sys, &gyro, &accel, &mag);
-  Serial.print(F("Calibration: "));
-  Serial.print(sys, DEC);
-  Serial.print(F(", "));
-  Serial.print(gyro, DEC);
-  Serial.print(F(", "));
-  Serial.print(accel, DEC);
-  Serial.print(F(", "));
-  Serial.print(mag, DEC);
-  Serial.println(F(""));
-
   delay(BNO055_SAMPLERATE_DELAY_MS);
 }
