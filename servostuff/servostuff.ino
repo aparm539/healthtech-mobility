@@ -38,7 +38,7 @@ void setup()
 void loop()
 {
   currentTime = millis();
-  if (currentTime % readRate){
+  if (currentTime % readRate == 0){
     // Read orientation data 
     imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
     double roll = euler.z();    
