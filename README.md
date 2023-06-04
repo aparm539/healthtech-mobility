@@ -2,7 +2,7 @@
 
 ## Self-Stabilizing System using BNO055 Sensor and Servos
 
-This program implements a self-stabilizing system using a BNO055 sensor and two servos. The program uses a PID control algorithm to adjust the servo angles and keep the sensor upright
+This program implements a self-stabilizing system using a BNO055 sensor and three servos. The program uses a PID control algorithm to adjust the servo angles and keep the sensor upright
 
 ### Hardware
 
@@ -23,9 +23,6 @@ The BNO055 sensor is an integrated 9-axis motion sensor.
 
 Current servos used only have 180 degrees of motion
 
-#### Fritzing Diagram
-
-TODO
 
 ### Software
 
